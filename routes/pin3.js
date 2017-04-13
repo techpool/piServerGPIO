@@ -2,9 +2,9 @@ var express = require('express');
 var router = express.Router();
 var gpio = require('rpi-gpio');
 
-gpio.setup(3, gpio.DIR_OUT, write);
 
 function write(valueToWrite, callback) {
+
     gpio.write(3, valueToWrite, function(err) {
         if (err) throw err;
         console.log('Written to pin');
@@ -18,15 +18,20 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/ON', function(req, res, next) {
-    write(true, function() {
-        res.send('respond with a resource');
-    });
+
+    gpio.setup(3, gpio.DIR_OUT,
+        write(true, function() {
+            res.send('respond with a resource');
+        })
+    );
 });
 
 router.post('/OFF', function(req, res, next) {
-    write(false, function() {
-        res.send('respond with a resource');
-    });
+    gpio.setup(3, gpio.DIR_OUT,
+        write(false, function() {
+            res.send('respond with a resource');
+        })
+    );
 });
 
 module.exports = router;
